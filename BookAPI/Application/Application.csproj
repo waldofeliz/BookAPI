@@ -1,0 +1,24 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net9.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\Domain\Domain.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Common\Behaviors\" />
+      <Folder Include="Common\Interfaces\Persistence\" />
+      <Folder Include="Common\Interfaces\Services\" />
+      <Folder Include="Common\Mappings\" />
+      <Folder Include="Common\Results\" />
+      <Folder Include="Features\Libros\Commands\" />
+      <Folder Include="Features\Libros\Dtos\" />
+      <Folder Include="Features\Libros\Queries\" />
+    </ItemGroup>
+
+</Project>
