@@ -1,0 +1,6 @@
+namespace Application.Features.Books.Commands.UpdateBook;
+
+public class UpdateBookHandler
+{
+    
+}
