@@ -1,6 +1,3 @@
 namespace Shared.Results;
 
-public class Error
-{
-    
-}
+public sealed record Error(string code ,string Message);

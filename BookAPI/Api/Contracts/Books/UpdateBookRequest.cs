@@ -1,6 +1,8 @@
 namespace Api.Contracts.Books;
 
-public class UpdateBookRequest
-{
-    
-}
+public sealed record UpdateBookRequest(
+    string Title,
+    string Isbn,
+    DateTime PublishedOn,
+    string? Description
+);

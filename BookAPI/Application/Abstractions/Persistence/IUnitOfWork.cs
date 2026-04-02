@@ -1,6 +1,6 @@
 namespace Application.Abstractions.Persistence;
 
-public class IUnitOfWork
+public interface IUnitOfWork
 {
-    
+    Task<int> SaveChangesAsync(CancellationToken ct);
 }

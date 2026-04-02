@@ -1,6 +1,9 @@
 namespace Api.Contracts.Books;
 
-public class CreateBookRequest
-{
-    
-}
+public sealed record CreateBookRequest
+(
+    string Title,
+    string Isbn,
+    DateTime PublishedOn,
+    string? Description
+);

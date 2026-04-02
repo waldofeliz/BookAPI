@@ -1,6 +1,5 @@
+using MediatR;
+
 namespace Application.Features.Books.Commands.DeleteBook;
 
-public class DeleteBookCommand
-{
-    
-}
+public sealed record DeleteBookCommand(Guid Id) : IRequest<Unit>;
