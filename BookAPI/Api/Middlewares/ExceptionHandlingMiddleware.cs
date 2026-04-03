@@ -11,6 +11,16 @@ public sealed class ExceptionHandlingMiddleware : IMiddleware
         {
             await next(context);
         }
+        catch (UnauthorizedAccessException ex)
+        {
+            context.Response.StatusCode = StatusCodes.Status401Unauthorized;
+            await context.Response.WriteAsJsonAsync(new ProblemDetails
+            {
+                Title = "No autorizado",
+                Status = StatusCodes.Status401Unauthorized,
+                Detail = ex.Message
+            });
+        }
         catch (ValidationException ex)
         {
             context.Response.StatusCode = StatusCodes.Status400BadRequest;

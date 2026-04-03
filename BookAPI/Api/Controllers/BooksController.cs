@@ -5,11 +5,13 @@ using Application.Features.Books.Commands.UpdateBook;
 using Application.Features.Books.Queries.GetBookById;
 using Application.Features.Books.Queries.ListBooks;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Api.Controllers;
 
 [ApiController]
+[Authorize]
 [Route("api/v1/[controller]")]
 public sealed class BooksController : ControllerBase
 {
