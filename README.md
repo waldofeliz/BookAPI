@@ -190,6 +190,9 @@ Crea la base en tu proveedor (Azure SQL, AWS RDS SQL Server, etc.), abre firewal
 
 Con la API en marcha, **Swagger UI** documenta los endpoints y permite probar la autenticación Bearer.
 
+<img width="1920" height="1267" alt="image" src="https://github.com/user-attachments/assets/9232da17-bd58-410f-8726-01503bc664cc" />
+
+
 ## Licencia
 
 Este proyecto está publicado bajo la licencia **MIT**. Consulta el archivo [LICENSE](LICENSE) para el texto completo.
