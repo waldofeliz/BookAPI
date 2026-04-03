@@ -1,5 +1,7 @@
 # BookAPI
 
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
 API REST para la gestión de libros, construida con **ASP.NET Core 9**, arquitectura en capas (Clean Architecture), **MediatR**, **Entity Framework Core**, **SQL Server**, autenticación **JWT** con **ASP.NET Core Identity** y **tokens de refresco** con rotación.
 
 ## Requisitos previos
@@ -188,6 +190,10 @@ Crea la base en tu proveedor (Azure SQL, AWS RDS SQL Server, etc.), abre firewal
 
 Con la API en marcha, **Swagger UI** documenta los endpoints y permite probar la autenticación Bearer.
 
-## Licencia y contribución
+## Licencia
 
-Ajusta esta sección según la licencia y las normas de tu equipo.
+Este proyecto está publicado bajo la licencia **MIT**. Consulta el archivo [LICENSE](LICENSE) para el texto completo.
+
+Puedes usar, copiar, modificar y distribuir el código con pocas condiciones (principalmente conservar el aviso de copyright y la licencia). No se ofrece garantía de ningún tipo.
+
+Si aceptas **contribuciones** de terceros, conviene definir en el README o en `CONTRIBUTING.md` cómo enviar pull requests y bajo qué licencia aportan el código (habitualmente la misma MIT).
