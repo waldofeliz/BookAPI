@@ -14,3 +14,5 @@
 /Users/waldofeliz/Desktop/Repository/BookAPI/BookAPI/Application/bin/Debug/net9.0/Domain.pdb
 /Users/waldofeliz/Desktop/Repository/BookAPI/BookAPI/Application/obj/Debug/net9.0/Application.csproj.AssemblyReference.cache
 /Users/waldofeliz/Desktop/Repository/BookAPI/BookAPI/Application/obj/Debug/net9.0/Applicat.44B5EDA2.Up2Date
+/Users/waldofeliz/Desktop/Repository/BookAPI/BookAPI/Application/bin/Debug/net9.0/Application.runtimeconfig.json
+/Users/waldofeliz/Desktop/Repository/BookAPI/BookAPI/Application/obj/Debug/net9.0/Application.genruntimeconfig.cache
