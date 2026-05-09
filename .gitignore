@@ -1,0 +1,95 @@
+## Compilación .NET
+[Bb]in/
+[Oo]bj/
+[Ll]og/
+[Ll]ogs/
+[Dd]ebug/
+[Rr]elease/
+[Rr]eleases/
+x64/
+x86/
+[Ww][Ii][Nn]32/
+[Aa][Rr][Mm]/
+[Aa][Rr][Mm]64/
+bld/
+[Bb]uild/
+artifacts/
+*_wpftmp.csproj
+
+## Visual Studio / MSBuild
+.vs/
+*.rsuser
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+*.userprefs
+*.tlog
+*.vspscc
+*.vssscc
+.builds
+*.pidb
+*.svclog
+*.scc
+**/*.DesktopClient/ModelManifest.xml
+**/*.Server/ModelManifest.xml
+
+## NuGet
+*.nupkg
+*.snupkg
+**/[Pp]ackages/*
+!**/[Pp]ackages/build/
+*.nuget.props
+*.nuget.targets
+project.lock.json
+project.fragment.lock.json
+
+## Herramientas .NET / ReSharper / Rider
+.dotnet/
+*.DotSettings.user
+.idea/
+*.sln.iml
+
+## Pruebas y cobertura
+[Tt]est[Rr]esult*/
+[Bb]uild[Ll]og.*
+*.trx
+*.coverage
+*.coveragexml
+coverage*.json
+coverage*.xml
+*.lcov
+TestResults/
+[Bb]enchmark[Dd]ot[Nn]et.Artifacts/
+
+## Visual Studio Code
+# Ignora todo salvo lo que suele compartirse en equipo
+.vscode/*
+!.vscode/extensions.json
+!.vscode/launch.json
+!.vscode/tasks.json
+
+## macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+.DocumentRevisions-V100
+.fseventsd
+.Spotlight-V100
+.TemporaryItems
+.Trashes
+.VolumeIcon.icns
+.com.apple.timemachine.donotpresent
+
+## Secretos y configuración local
+**/appsettings.*.local.json
+**/appsettings.Local.json
+secrets.json
+
+## Entorno y temporales
+.env
+.env.*
+!.env.example
+*.swp
+*~
