@@ -4,5 +4,7 @@ public sealed record UpdateBookRequest(
     string Title,
     string Isbn,
     DateTime PublishedOn,
-    string? Description
+    string? Description,
+    string? ModifiedBy,
+    bool State
 );

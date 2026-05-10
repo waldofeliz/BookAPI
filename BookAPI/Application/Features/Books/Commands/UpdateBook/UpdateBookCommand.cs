@@ -8,5 +8,7 @@ public sealed record UpdateBookCommand(
     string Title,
     string Isbn,
     DateTime PublishedOn,
-    string? Description
+    string? Description,
+    string? ModifiedBy,
+    bool State
 ) : IRequest<BookDto>;

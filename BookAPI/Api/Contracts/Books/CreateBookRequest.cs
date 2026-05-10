@@ -5,5 +5,6 @@ public sealed record CreateBookRequest
     string Title,
     string Isbn,
     DateTime PublishedOn,
-    string? Description
+    string? Description,
+    string CreatedBy
 );

@@ -23,7 +23,7 @@ public sealed class UpdateBookHandler : IRequestHandler<UpdateBookCommand, BookD
         var isExists = await _repo.ExistsByIsbnAsync(request.Isbn, excludeId: request.Id, ct);
         if(isExists) throw new InvalidOperationException("A book with the same ISBN already exists.");
         
-        book.Update(request.Title, request.Isbn, request.PublishedOn, request.Description);
+        book.Update(request.Title, request.Isbn, request.PublishedOn, request.Description, request.ModifiedBy, request.State);
         
         _repo.Update(book);
         await _uow.SaveChangesAsync(ct);

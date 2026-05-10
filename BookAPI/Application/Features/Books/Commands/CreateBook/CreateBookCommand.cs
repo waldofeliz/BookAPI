@@ -7,5 +7,6 @@ public sealed record CreateBookCommand(
     string Title,
     string Isbn,
     DateTime PublishedOn,
-    string? Description
+    string? Description,
+    string CreateBy
 ) : IRequest<BookDto>;

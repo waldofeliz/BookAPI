@@ -21,7 +21,7 @@ public sealed class CreateBookHandler : IRequestHandler<CreateBookCommand, BookD
         var exists = await _repo.ExistsByIsbnAsync(request.Isbn, excludeId: null, ct);
         if (exists) throw new InvalidOperationException("A book with the same ISBN already exists.");
 
-        var book = new Book(request.Title, request.Isbn, request.PublishedOn, request.Description);
+        var book = new Book(request.Title, request.Isbn, request.PublishedOn, request.Description, request.CreateBy);
 
         await _repo.AddAsync(book, ct);
         await _uow.SaveChangesAsync(ct);

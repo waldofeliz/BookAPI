@@ -7,25 +7,39 @@ public class Book
     public string Isbn { get; private set; } = default!;
     public DateTime PublishedOn { get; private set; }
     public string? Description { get; private set; }
+    public bool State { get; private set; } = default;
+    public string CreateBy { get; private set; }
+    public DateTime CreateOn { get; private set; }
+    public string? ModifiedBy { get; private set; }
+    public DateTime ModifiedOn { get; private set; }
+    public int Version { get; private set; }
     
     private Book() {} //EF Core
 
-    public Book(string title, string isbn, DateTime publishedOn, string? description)
+    public Book(string title, string isbn, DateTime publishedOn, string? description, string createBy)
     {
         SetTitle(title);
         SetIsbn(isbn);
         
         PublishedOn = publishedOn;
         Description = description;
+        CreateBy = createBy;
+        CreateOn = new DateTime().Date;
+        State = true;
+        Version = 1;
     }
     
-    public void Update(string title, string isbn, DateTime publishedOn, string? description)
+    public void Update(string title, string isbn, DateTime publishedOn, string? description, string? modifiedBy, bool state)
     {
         SetTitle(title);
         SetIsbn(isbn);
 
         PublishedOn = publishedOn;
         Description = description;
+        ModifiedOn = new DateTime().Date;
+        ModifiedBy = modifiedBy;
+        State = state;
+        Version++;
     }
     
     private void SetTitle(string title)
