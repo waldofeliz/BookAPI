@@ -13,7 +13,7 @@
     <ItemGroup>
       <Folder Include="Common\Result\" />
       <Folder Include="Features\Authors\" />
-      <Folder Include="Features\Books\Validators\" />
+      <Folder Include="Features\Libros\Validators\" />
       <Folder Include="Features\Categories\" />
     </ItemGroup>
 

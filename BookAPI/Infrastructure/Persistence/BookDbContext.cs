@@ -10,7 +10,7 @@ public sealed class BookDbContext : IdentityDbContext<ApplicationUser, IdentityR
 {
     public BookDbContext(DbContextOptions<BookDbContext> options) : base(options) { }
 
-    public DbSet<Book> Books => Set<Book>();
+    public DbSet<Libro> Libros => Set<Libro>();
 
     public DbSet<RefreshToken> RefreshTokens => Set<RefreshToken>();
 

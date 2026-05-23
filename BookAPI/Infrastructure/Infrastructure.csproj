@@ -15,7 +15,6 @@
       <Folder Include="DependencyInjection\" />
       <Folder Include="Identity\" />
       <Folder Include="Migrations\" />
-      <Folder Include="Persistence\DbContext\" />
       <Folder Include="Persistence\Migrations\" />
     </ItemGroup>
 

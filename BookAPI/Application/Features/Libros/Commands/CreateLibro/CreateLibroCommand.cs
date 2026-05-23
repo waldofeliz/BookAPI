@@ -1,0 +1,12 @@
+using Application.Features.Libros.Dtos;
+using MediatR;
+
+namespace Application.Features.Libros.Commands.CreateLibro;
+
+public sealed record CreateLibroCommand(
+    string Titulo,
+    string Isbn,
+    DateTime PublicadoEn,
+    string? Descripcion,
+    string CreadoPor
+) : IRequest<LibroDto>;

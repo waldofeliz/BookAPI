@@ -82,7 +82,7 @@ public static class DependencyInjection
                 };
             });
 
-        services.AddScoped<IBookRepository, BookRepository>();
+        services.AddScoped<ILibroRepository, LibroRepository>();
         services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
         services.AddScoped<IUnitOfWork, UnitOfWork>();
 
