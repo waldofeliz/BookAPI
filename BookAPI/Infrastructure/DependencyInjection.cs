@@ -83,6 +83,7 @@ public static class DependencyInjection
             });
 
         services.AddScoped<ILibroRepository, LibroRepository>();
+        services.AddScoped<IAutorRepository, AutorRepository>();
         services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
         services.AddScoped<IUnitOfWork, UnitOfWork>();
 

@@ -1,6 +1,6 @@
 namespace Domain.Entities;
 
-public class Libro
+public sealed class Libro
 {
     public Guid Id { get; private set; } =  Guid.NewGuid();
     public string Titulo { get; private set; } = default!;

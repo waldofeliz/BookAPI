@@ -12,6 +12,8 @@ public sealed class BookDbContext : IdentityDbContext<ApplicationUser, IdentityR
 
     public DbSet<Libro> Libros => Set<Libro>();
 
+    public DbSet<Autor> Autores => Set<Autor>();
+
     public DbSet<RefreshToken> RefreshTokens => Set<RefreshToken>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
