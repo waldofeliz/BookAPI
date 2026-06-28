@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Application.Features.Editoras.Queries.ListEditoras;
 
-public sealed class ListEditorasHandler: IRequestHandler<ListEditorasQuery, IReadOnlyList<EditoraDto>>
+public sealed class ListEditorasHandler : IRequestHandler<ListEditorasQuery, IReadOnlyList<EditoraDto>>
 {
     private readonly IEditoraRepository _repo;
 
@@ -13,24 +13,32 @@ public sealed class ListEditorasHandler: IRequestHandler<ListEditorasQuery, IRea
     
     public async Task<IReadOnlyList<EditoraDto>> Handle(ListEditorasQuery request, CancellationToken ct)
     {
-        var page = request.Page < 1 ? 1 : request.Page;
-        var pageSize = request.PageSize is < 1 or > 100 ? 10 : request.PageSize;
-
         var query = _repo.Query().AsNoTracking();
 
         if (!string.IsNullOrWhiteSpace(request.Search))
         {
             var s = request.Search.Trim();
-            query = query.Where(b => b.Nombre.Contains(s));
+            query = query.Where(e =>
+                e.Nombre.Contains(s) ||
+                (e.Pais != null && e.Pais.Contains(s)) ||
+                (e.Descripcion != null && e.Descripcion.Contains(s)));
         }
 
         var items = await query
-            .OrderByDescending(b => b.Nombre)
-            .Skip((page - 1) * pageSize)
-            .Take(pageSize)
-            .Select(b => new EditoraDto(b.Nombre, b.Descripcion, b.Direccion, b.Pais, b.Website, b.Telefono))
+            .OrderBy(e => e.Nombre)
+            .Skip((request.Page - 1) * request.PageSize)
+            .Take(request.PageSize)
+            .Select(e => new EditoraDto(
+                e.Id,
+                e.Nombre,
+                e.Descripcion,
+                e.Direccion,
+                e.Pais,
+                e.Website,
+                e.Telefono,
+                e.Estado))
             .ToListAsync(ct);
-        
+
         return items;
     }
 }

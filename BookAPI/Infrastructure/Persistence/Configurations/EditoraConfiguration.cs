@@ -13,8 +13,11 @@ public sealed class EditoraConfiguration: IEntityTypeConfiguration<Editora>
         builder.HasKey(x => x.Id);
         
         builder.Property(x => x.Nombre)
-            .HasMaxLength(100)
+            .HasMaxLength(50)
             .IsRequired();
+
+        builder.HasIndex(x => x.Nombre)
+            .IsUnique();
 
         builder.Property(x => x.Descripcion);
 

@@ -21,6 +21,16 @@ public sealed class ExceptionHandlingMiddleware : IMiddleware
                 Detail = ex.Message
             });
         }
+        catch (ArgumentException ex)
+        {
+            context.Response.StatusCode = StatusCodes.Status400BadRequest;
+            await context.Response.WriteAsJsonAsync(new ProblemDetails
+            {
+                Title = "Validation error",
+                Status = StatusCodes.Status400BadRequest,
+                Detail = ex.Message
+            });
+        }
         catch (ValidationException ex)
         {
             context.Response.StatusCode = StatusCodes.Status400BadRequest;

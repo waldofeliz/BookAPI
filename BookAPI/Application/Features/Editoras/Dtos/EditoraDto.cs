@@ -7,5 +7,6 @@ public sealed record EditoraDto(
     string? Direccion,
     string? Pais,
     string? Website,
-    string? Telefono
-    );
+    string? Telefono,
+    bool Estado
+);

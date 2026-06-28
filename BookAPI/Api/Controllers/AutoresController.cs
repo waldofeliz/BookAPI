@@ -15,9 +15,9 @@ namespace Api.Controllers;
 [Route("api/v1/[controller]")]
 public sealed class AutoresController : ControllerBase
 {
-    public readonly IMediator _mediator;
+    private readonly IMediator _mediator;
     
-    public AutoresController(IMediator mediator) =>  _mediator = mediator;
+    public AutoresController(IMediator mediator) => _mediator = mediator;
 
     #region GET
     

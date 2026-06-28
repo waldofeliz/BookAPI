@@ -1,0 +1,11 @@
+{
+  "recommendations": [
+    "ms-dotnettools.csdevkit",
+    "ms-dotnettools.csharp",
+    "ms-dotnettools.vscode-dotnet-runtime",
+    "ms-dotnettools.vscodeintellicode-csharp",
+    "patcx.vscode-nuget-gallery",
+    "ms-azuretools.vscode-docker",
+    "snyk.snyk-vulnerability-scanner"
+  ]
+}

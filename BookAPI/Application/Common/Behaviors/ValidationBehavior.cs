@@ -12,23 +12,22 @@ where TRequest : notnull
 
     public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken ct)
     {
-        if (!_validators.Any()) return await next();
+        if (!_validators.Any()) return await next(ct);
         
         var context = new ValidationContext<TRequest>(request);
         
         var failures = _validators
             .Select(v => v.Validate(context))
             .SelectMany(r => r.Errors)
-            .Where( f => f is not null)
+            .Where(f => f is not null)
             .ToList();
 
         if (failures.Count != 0)
         {
-            // Puedes mapear esto a ProblemDetails en el Api middleware
             var message = string.Join(" | ", failures.Select(f => $"{f.PropertyName}: {f.ErrorMessage}"));
             throw new ValidationException(message, failures);
         }
-        return await next();
+        return await next(ct);
     }
     
 }

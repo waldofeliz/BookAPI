@@ -4,7 +4,7 @@ using MediatR;
 
 namespace Application.Features.Autores.Queries.GetAutorPorId;
 
-public sealed class GetAutorPorIdHandler : IRequestHandler<GetAutorPorIdQuery, AutorDto>
+public sealed class GetAutorPorIdHandler : IRequestHandler<GetAutorPorIdQuery, AutorDto?>
 {
     private readonly IAutorRepository _repo;
 
