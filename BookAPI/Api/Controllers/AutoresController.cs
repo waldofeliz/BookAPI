@@ -1,4 +1,5 @@
 using Api.Contracts.Autores;
+using Application.Abstractions.Security;
 using Application.Features.Autores.Commands.CreateAutor;
 using Application.Features.Autores.Commands.DeleteAutor;
 using Application.Features.Autores.Commands.UpdateAutor;
@@ -16,11 +17,14 @@ namespace Api.Controllers;
 public sealed class AutoresController : ControllerBase
 {
     private readonly IMediator _mediator;
-    
-    public AutoresController(IMediator mediator) => _mediator = mediator;
+    private readonly ICurrentUserService _currentUser;
 
-    #region GET
-    
+    public AutoresController(IMediator mediator, ICurrentUserService currentUser)
+    {
+        _mediator = mediator;
+        _currentUser = currentUser;
+    }
+
     [HttpGet("{id:guid}")]
     public async Task<IActionResult> GetById([FromRoute] Guid id, CancellationToken ct)
     {
@@ -36,10 +40,6 @@ public sealed class AutoresController : ControllerBase
         return Ok(result);
     }
 
-    #endregion
-    
-    #region POST
-
     [HttpPost]
     public async Task<IActionResult> Create([FromBody] CreateAutorRequest request, CancellationToken ct)
     {
@@ -48,14 +48,11 @@ public sealed class AutoresController : ControllerBase
             request.Apellido,
             request.Cumpleanio,
             request.Biografia,
-            request.CreadoPor,
+            _currentUser.GetUserName(),
             request.Nacionalidad), ct);
-        
+
         return CreatedAtAction(nameof(GetById), new { id = result.Id }, result);
     }
-    #endregion
-    
-    #region PUT
 
     [HttpPut("{id:guid}")]
     public async Task<IActionResult> Update([FromRoute] Guid id, [FromBody] UpdateAutorRequest request,
@@ -67,15 +64,12 @@ public sealed class AutoresController : ControllerBase
             request.Apellido,
             request.Cumpleanio,
             request.Biografia,
-            request.ModificadoPor,
+            _currentUser.GetUserName(),
             request.Estado,
             request.Nacionalidad), ct);
-        
+
         return Ok(result);
     }
-    #endregion
-    
-    #region DELETE
 
     [HttpDelete("{id:guid}")]
     public async Task<IActionResult> Delete([FromRoute] Guid id, CancellationToken ct)
@@ -83,5 +77,4 @@ public sealed class AutoresController : ControllerBase
         await _mediator.Send(new DeleteAutorCommand(id), ct);
         return NoContent();
     }
-    #endregion
 }

@@ -12,10 +12,7 @@ public sealed class GetLibroPorIdHandler : IRequestHandler<GetLibroPorIdQuery, L
 
     public async Task<LibroDto?> Handle(GetLibroPorIdQuery request, CancellationToken ct)
     {
-        var libro = await _repo.GetByIdAsync(request.Id, ct);
-        if (libro is null) return null;
-
-        return new LibroDto(libro.Id, libro.Titulo, libro.Isbn, libro.PublicadoEn, libro.Descripcion, libro.CoverImageUrl,
-         libro.Lenguaje, libro.Paginas, libro.Edicion, libro.SubTitulo);
+        var libro = await _repo.GetByIdWithDetailsAsync(request.Id, ct);
+        return libro is null ? null : LibroDtoMapper.ToDto(libro);
     }
 }

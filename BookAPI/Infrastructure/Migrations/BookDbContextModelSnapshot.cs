@@ -158,6 +158,9 @@ namespace Infrastructure.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
+                    b.Property<Guid?>("EditoraId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<bool>("Estado")
                         .HasColumnType("bit");
 
@@ -198,12 +201,32 @@ namespace Infrastructure.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("EditoraId");
+
                     b.HasIndex("Isbn")
                         .IsUnique();
 
                     b.HasIndex("Paginas");
 
                     b.ToTable("Libros", (string)null);
+                });
+
+            modelBuilder.Entity("Domain.Entities.LibroAutor", b =>
+                {
+                    b.Property<Guid>("LibroId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("AutorId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("Orden")
+                        .HasColumnType("int");
+
+                    b.HasKey("LibroId", "AutorId");
+
+                    b.HasIndex("AutorId");
+
+                    b.ToTable("LibroAutores", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entities.RefreshToken", b =>
@@ -447,6 +470,35 @@ namespace Infrastructure.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("Domain.Entities.Libro", b =>
+                {
+                    b.HasOne("Domain.Entities.Editora", "Editora")
+                        .WithMany()
+                        .HasForeignKey("EditoraId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.Navigation("Editora");
+                });
+
+            modelBuilder.Entity("Domain.Entities.LibroAutor", b =>
+                {
+                    b.HasOne("Domain.Entities.Autor", "Autor")
+                        .WithMany("LibroAutores")
+                        .HasForeignKey("AutorId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Domain.Entities.Libro", "Libro")
+                        .WithMany("LibroAutores")
+                        .HasForeignKey("LibroId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Autor");
+
+                    b.Navigation("Libro");
+                });
+
             modelBuilder.Entity("Domain.Entities.RefreshToken", b =>
                 {
                     b.HasOne("Infrastructure.Identity.ApplicationUser", null)
@@ -505,6 +557,16 @@ namespace Infrastructure.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("Domain.Entities.Autor", b =>
+                {
+                    b.Navigation("LibroAutores");
+                });
+
+            modelBuilder.Entity("Domain.Entities.Libro", b =>
+                {
+                    b.Navigation("LibroAutores");
                 });
 
             modelBuilder.Entity("Infrastructure.Identity.ApplicationUser", b =>

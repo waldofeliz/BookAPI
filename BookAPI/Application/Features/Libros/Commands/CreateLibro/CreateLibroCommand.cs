@@ -13,5 +13,7 @@ public sealed record CreateLibroCommand(
     string? Lenguaje,
     int Paginas,
     string? Edicion,
-    string? SubTitulo
+    string? SubTitulo,
+    Guid? EditoraId,
+    IReadOnlyList<Guid>? AutorIds
 ) : IRequest<LibroDto>;

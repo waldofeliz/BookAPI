@@ -17,5 +17,7 @@ public sealed class UpdateLibroValidator : AbstractValidator<UpdateLibroCommand>
         RuleFor(x => x.Edicion).MaximumLength(50).When(x => x.Edicion is not null);
         RuleFor(x => x.Lenguaje).MaximumLength(50).When(x => x.Lenguaje is not null);
         RuleFor(x => x.Paginas).GreaterThan(0);
+        RuleFor(x => x.EditoraId).NotEmpty().When(x => x.EditoraId.HasValue);
+        RuleForEach(x => x.AutorIds).NotEmpty().When(x => x.AutorIds is not null);
     }
 }

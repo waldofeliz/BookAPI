@@ -6,10 +6,11 @@ public sealed record CreateLibroRequest
     string Isbn,
     DateTime PublicadoEn,
     string? Descripcion,
-    string CreadoPor,
     string? SubTitulo,
     string? CoverImageUrl,
     string? Edicion,
     int Paginas,
-    string? Lenguaje
+    string? Lenguaje,
+    Guid? EditoraId,
+    IReadOnlyList<Guid>? AutorIds
 );

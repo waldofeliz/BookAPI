@@ -5,11 +5,12 @@ public sealed record UpdateLibroRequest(
     string Isbn,
     DateTime PublicadoEn,
     string? Descripcion,
-    string? ModificadoPor,
     bool Estado,
     string? SubTitulo,
     string? CoverImageUrl,
     string? Edicion,
     int Paginas,
-    string? Lenguaje
+    string? Lenguaje,
+    Guid? EditoraId,
+    IReadOnlyList<Guid>? AutorIds
 );

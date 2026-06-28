@@ -5,6 +5,17 @@ namespace Api.Middlewares;
 
 public sealed class ExceptionHandlingMiddleware : IMiddleware
 {
+    private readonly IHostEnvironment _environment;
+    private readonly ILogger<ExceptionHandlingMiddleware> _logger;
+
+    public ExceptionHandlingMiddleware(
+        IHostEnvironment environment,
+        ILogger<ExceptionHandlingMiddleware> logger)
+    {
+        _environment = environment;
+        _logger = logger;
+    }
+
     public async Task InvokeAsync(HttpContext context, RequestDelegate next)
     {
         try
@@ -13,63 +24,46 @@ public sealed class ExceptionHandlingMiddleware : IMiddleware
         }
         catch (UnauthorizedAccessException ex)
         {
-            context.Response.StatusCode = StatusCodes.Status401Unauthorized;
-            await context.Response.WriteAsJsonAsync(new ProblemDetails
-            {
-                Title = "No autorizado",
-                Status = StatusCodes.Status401Unauthorized,
-                Detail = ex.Message
-            });
+            await WriteProblemAsync(context, StatusCodes.Status401Unauthorized, "No autorizado", ex.Message);
         }
         catch (ArgumentException ex)
         {
-            context.Response.StatusCode = StatusCodes.Status400BadRequest;
-            await context.Response.WriteAsJsonAsync(new ProblemDetails
-            {
-                Title = "Validation error",
-                Status = StatusCodes.Status400BadRequest,
-                Detail = ex.Message
-            });
+            await WriteProblemAsync(context, StatusCodes.Status400BadRequest, "Validation error", ex.Message);
         }
         catch (ValidationException ex)
         {
-            context.Response.StatusCode = StatusCodes.Status400BadRequest;
-            await context.Response.WriteAsJsonAsync(new ProblemDetails
-            {
-                Title = "Validation error",
-                Status = StatusCodes.Status400BadRequest,
-                Detail = ex.Message
-            });
+            await WriteProblemAsync(context, StatusCodes.Status400BadRequest, "Validation error", ex.Message);
         }
         catch (KeyNotFoundException ex)
         {
-            context.Response.StatusCode = StatusCodes.Status404NotFound;
-            await context.Response.WriteAsJsonAsync(new ProblemDetails
-            {
-                Title = "Key not found",
-                Status = StatusCodes.Status404NotFound,
-                Detail = ex.Message
-            });
+            await WriteProblemAsync(context, StatusCodes.Status404NotFound, "Key not found", ex.Message);
         }
         catch (InvalidOperationException ex)
         {
-            context.Response.StatusCode = StatusCodes.Status409Conflict;
-            await context.Response.WriteAsJsonAsync(new ProblemDetails
-            {
-                Title = "Conflict",
-                Status = StatusCodes.Status409Conflict,
-                Detail = ex.Message
-            });
+            await WriteProblemAsync(context, StatusCodes.Status409Conflict, "Conflict", ex.Message);
         }
         catch (Exception ex)
         {
-            context.Response.StatusCode = StatusCodes.Status500InternalServerError;
-            await context.Response.WriteAsJsonAsync(new ProblemDetails
-            {
-                Title = "Server error",
-                Status = StatusCodes.Status500InternalServerError,
-                Detail = ex.Message
-            });
+            _logger.LogError(ex, "Error no controlado en {Method} {Path}",
+                context.Request.Method,
+                context.Request.Path);
+
+            var detail = _environment.IsDevelopment()
+                ? ex.Message
+                : "Ocurrió un error interno. Consulte los logs del servidor.";
+
+            await WriteProblemAsync(context, StatusCodes.Status500InternalServerError, "Server error", detail);
         }
+    }
+
+    private static async Task WriteProblemAsync(HttpContext context, int status, string title, string detail)
+    {
+        context.Response.StatusCode = status;
+        await context.Response.WriteAsJsonAsync(new ProblemDetails
+        {
+            Title = title,
+            Status = status,
+            Detail = detail
+        });
     }
 }

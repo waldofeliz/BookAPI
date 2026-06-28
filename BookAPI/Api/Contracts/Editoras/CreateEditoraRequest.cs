@@ -6,6 +6,5 @@ public sealed record CreateEditoraRequest(
     string? Direccion,
     string? Pais,
     string? Website,
-    string? Telefono,
-    string CreadoPor
-    );
+    string? Telefono
+);

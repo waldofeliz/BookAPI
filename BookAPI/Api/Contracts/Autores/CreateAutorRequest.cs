@@ -5,6 +5,5 @@ public sealed record CreateAutorRequest(
     string Apellido,
     DateTime Cumpleanio,
     string? Biografia,
-    string? Nacionalidad,
-    string CreadoPor
-    );
+    string? Nacionalidad
+);

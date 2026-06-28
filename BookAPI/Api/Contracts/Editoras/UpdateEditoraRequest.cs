@@ -7,6 +7,5 @@ public sealed record UpdateEditoraRequest(
     string? Pais,
     string? Website,
     string? Telefono,
-    bool Estado,
-    string ModificadoPor
-    );
+    bool Estado
+);

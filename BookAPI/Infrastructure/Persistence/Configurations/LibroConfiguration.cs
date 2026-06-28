@@ -58,5 +58,14 @@ public sealed class LibroConfiguration : IEntityTypeConfiguration<Libro>
         builder.Property(x => x.Version)
             .IsConcurrencyToken()
             .IsRequired();
+
+        builder.Property(x => x.EditoraId);
+
+        builder.HasOne(x => x.Editora)
+            .WithMany()
+            .HasForeignKey(x => x.EditoraId)
+            .OnDelete(DeleteBehavior.SetNull);
+
+        builder.HasIndex(x => x.EditoraId);
     }
 }

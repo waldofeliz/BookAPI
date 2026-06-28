@@ -18,6 +18,8 @@ public sealed class BookDbContext : IdentityDbContext<ApplicationUser, IdentityR
 
     public DbSet<Editora> Editoras => Set<Editora>();
 
+    public DbSet<LibroAutor> LibroAutores => Set<LibroAutor>();
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);

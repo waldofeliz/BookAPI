@@ -186,6 +186,15 @@ Configura al menos:
 
 Crea la base en tu proveedor (Azure SQL, AWS RDS SQL Server, etc.), abre firewall/reglas para el origen de la API y usa la cadena de conexión en variables de entorno. Aplica migraciones desde tu máquina con red permitida o desde el pipeline de CI/CD.
 
+## Documentación
+
+Documentación funcional y técnica completa en la carpeta [`documentación/`](documentación/README.md):
+
+- [Visión general y casos de uso](documentación/funcional/vision-general.md)
+- [Arquitectura y referencia API](documentación/tecnica/arquitectura.md)
+- [Modelo de datos y migraciones](documentación/tecnica/modelo-datos.md)
+- [Despliegue, Docker y CI/CD](documentación/tecnica/despliegue-devops.md)
+
 ## Documentación interactiva
 
 Con la API en marcha, **Swagger UI** documenta los endpoints y permite probar la autenticación Bearer.

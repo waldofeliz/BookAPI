@@ -1,4 +1,5 @@
 using Api.Contracts.Books;
+using Application.Abstractions.Security;
 using Application.Features.Libros.Commands.CreateLibro;
 using Application.Features.Libros.Commands.UpdateLibro;
 using Application.Features.Libros.Queries.GetLibroPorId;
@@ -16,8 +17,13 @@ namespace Api.Controllers;
 public sealed class LibrosController : ControllerBase
 {
     private readonly IMediator _mediator;
-    
-    public LibrosController(IMediator mediator) => _mediator = mediator;
+    private readonly ICurrentUserService _currentUser;
+
+    public LibrosController(IMediator mediator, ICurrentUserService currentUser)
+    {
+        _mediator = mediator;
+        _currentUser = currentUser;
+    }
 
     [HttpPost]
     public async Task<IActionResult> Create([FromBody] CreateLibroRequest request, CancellationToken ct)
@@ -27,17 +33,19 @@ public sealed class LibrosController : ControllerBase
             request.Isbn,
             request.PublicadoEn,
             request.Descripcion,
-            request.CreadoPor,
+            _currentUser.GetUserName(),
             request.CoverImageUrl,
             request.Lenguaje,
             request.Paginas,
             request.Edicion,
-            request.SubTitulo
-            ), ct);
+            request.SubTitulo,
+            request.EditoraId,
+            request.AutorIds
+        ), ct);
 
         return CreatedAtAction(nameof(GetById), new { id = result.Id }, result);
     }
-    
+
     [HttpGet("{id:guid}")]
     public async Task<IActionResult> GetById([FromRoute] Guid id, CancellationToken ct)
     {
@@ -61,13 +69,15 @@ public sealed class LibrosController : ControllerBase
             request.Isbn,
             request.PublicadoEn,
             request.Descripcion,
-            request.ModificadoPor,
+            _currentUser.GetUserName(),
             request.Estado,
             request.CoverImageUrl,
             request.Lenguaje,
             request.Paginas,
             request.Edicion,
-            request.SubTitulo
+            request.SubTitulo,
+            request.EditoraId,
+            request.AutorIds
         ), ct);
 
         return Ok(result);

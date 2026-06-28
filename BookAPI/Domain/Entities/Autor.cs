@@ -14,7 +14,8 @@ public sealed class Autor
     public string? ModificadoPor { get; private set; }
     public DateTime ModificadoEn { get; private set; }
     public int Version { get; private set; }
-    
+    public ICollection<LibroAutor> LibroAutores { get; private set; } = [];
+
     private Autor() {} //EF Core
 
     public Autor(string nombre, string apellido, string? biografia,  DateTime cumpleanio, string creadoPor, string? nacionalidad)
@@ -24,7 +25,7 @@ public sealed class Autor
         
         Biografia = biografia;
         Cumpleanio = cumpleanio;
-        CreadoEn = new DateTime().Date;
+        CreadoEn = DateTime.UtcNow;
         CreadoPor = creadoPor;
         Estado = true;
         Version = 1;
@@ -38,7 +39,7 @@ public sealed class Autor
         
         Biografia = biografia;
         Cumpleanio = cumpleanio;
-        ModificadoEn = new DateTime().Date;
+        ModificadoEn = DateTime.UtcNow;
         ModificadoPor = modificadoPor;
         Estado = estado;
         Nacionalidad = nacionalidad;

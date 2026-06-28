@@ -2,16 +2,17 @@ using Application.Abstractions.Persistence;
 using Application.Features.Autores.Dtos;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Shared.Results;
 
 namespace Application.Features.Autores.Queries.ListAutores;
 
-public sealed class ListAutoresHandler: IRequestHandler<ListAutoresQuery, IReadOnlyList<AutorDto>>
+public sealed class ListAutoresHandler : IRequestHandler<ListAutoresQuery, PagedResult<AutorDto>>
 {
     private readonly IAutorRepository _repo;
 
     public ListAutoresHandler(IAutorRepository repo) => _repo = repo;
-    
-    public async Task<IReadOnlyList<AutorDto>> Handle(ListAutoresQuery request, CancellationToken ct)
+
+    public async Task<PagedResult<AutorDto>> Handle(ListAutoresQuery request, CancellationToken ct)
     {
         var page = request.Page < 1 ? 1 : request.Page;
         var pageSize = request.PageSize is < 1 or > 100 ? 10 : request.PageSize;
@@ -24,13 +25,19 @@ public sealed class ListAutoresHandler: IRequestHandler<ListAutoresQuery, IReadO
             query = query.Where(b => b.Nombre.Contains(s) || b.Apellido.Contains(s));
         }
 
+        var totalCount = await query.CountAsync(ct);
+
         var items = await query
             .OrderByDescending(b => b.Nombre)
             .Skip((page - 1) * pageSize)
             .Take(pageSize)
             .Select(b => new AutorDto(b.Id, b.Nombre, b.Apellido, b.Cumpleanio, b.Biografia, b.Nacionalidad))
             .ToListAsync(ct);
-        
-        return items;
+
+        return new PagedResult<AutorDto>
+        {
+            Items = items,
+            Meta = new PageMeta(page, pageSize, totalCount)
+        };
     }
 }

@@ -7,6 +7,7 @@ public interface IAutorRepository
     Task<Autor?> GetByIdAsync(Guid id, CancellationToken ct);
     
     Task<bool> ExistsByNombreYApellidoAsync(string nombre, string apellido,Guid? excludeId, CancellationToken ct);
+    Task<bool> AllExistAsync(IEnumerable<Guid> ids, CancellationToken ct);
     
     Task AddAsync(Autor autor, CancellationToken ct);
     void Update(Autor autor);

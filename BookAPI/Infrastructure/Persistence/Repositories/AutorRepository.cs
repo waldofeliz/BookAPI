@@ -23,6 +23,14 @@ public sealed class AutorRepository: IAutorRepository
         return await q.AnyAsync(ct);
     }
 
+    public async Task<bool> AllExistAsync(IEnumerable<Guid> ids, CancellationToken ct)
+    {
+        var idList = ids.Distinct().ToList();
+        if (idList.Count == 0) return true;
+        var count = await _db.Autores.CountAsync(a => idList.Contains(a.Id), ct);
+        return count == idList.Count;
+    }
+
     public Task AddAsync(Autor autor, CancellationToken ct)
         => _db.Autores.AddAsync(autor, ct).AsTask();
     

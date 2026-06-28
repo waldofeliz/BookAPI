@@ -1,15 +1,17 @@
 namespace Application.Features.Libros.Dtos;
 
-public sealed record LibroDto
-(
+public sealed record LibroDto(
     Guid Id,
     string Titulo,
     string Isbn,
     DateTime? PublicadoEn,
     string? Descripcion,
-    string? coverImageUrl,
+    string? CoverImageUrl,
     string? Lenguaje,
     int Paginas,
     string? Edicion,
-    string? SubTitulo
- );
+    string? SubTitulo,
+    Guid? EditoraId,
+    string? EditoraNombre,
+    IReadOnlyList<AutorResumenDto> Autores
+);

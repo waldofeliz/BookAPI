@@ -15,6 +15,13 @@ public sealed class LibroRepository : ILibroRepository
     public Task<Libro?> GetByIdAsync(Guid id, CancellationToken ct)
         => _db.Libros.FirstOrDefaultAsync(b => b.Id == id, ct);
 
+    public Task<Libro?> GetByIdWithDetailsAsync(Guid id, CancellationToken ct)
+        => _db.Libros
+            .Include(l => l.Editora)
+            .Include(l => l.LibroAutores)
+            .ThenInclude(la => la.Autor)
+            .FirstOrDefaultAsync(b => b.Id == id, ct);
+
     public async Task<bool> ExistsByIsbnAsync(string isbn, Guid? excludeId, CancellationToken ct)
     {
         var q = _db.Libros.Where(b => b.Isbn == isbn);

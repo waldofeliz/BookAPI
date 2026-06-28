@@ -15,5 +15,7 @@ public sealed record UpdateLibroCommand(
     string? Lenguaje,
     int Paginas,
     string? Edicion,
-    string? SubTitulo
+    string? SubTitulo,
+    Guid? EditoraId,
+    IReadOnlyList<Guid>? AutorIds
 ) : IRequest<LibroDto>;

@@ -1,4 +1,5 @@
 using Api.Contracts.Editoras;
+using Application.Abstractions.Security;
 using Application.Features.Editoras.Commands.CreateEditora;
 using Application.Features.Editoras.Commands.DeleteEditora;
 using Application.Features.Editoras.Commands.UpdateEditora;
@@ -16,8 +17,13 @@ namespace Api.Controllers;
 public sealed class EditorasController : ControllerBase
 {
     private readonly IMediator _mediator;
+    private readonly ICurrentUserService _currentUser;
 
-    public EditorasController(IMediator mediator) => _mediator = mediator;
+    public EditorasController(IMediator mediator, ICurrentUserService currentUser)
+    {
+        _mediator = mediator;
+        _currentUser = currentUser;
+    }
 
     [HttpGet("{id:guid}")]
     public async Task<IActionResult> GetById([FromRoute] Guid id, CancellationToken ct)
@@ -47,7 +53,7 @@ public sealed class EditorasController : ControllerBase
             request.Pais,
             request.Website,
             request.Telefono,
-            request.CreadoPor), ct);
+            _currentUser.GetUserName()), ct);
 
         return CreatedAtAction(nameof(GetById), new { id = result.Id }, result);
     }
@@ -67,7 +73,7 @@ public sealed class EditorasController : ControllerBase
             request.Website,
             request.Telefono,
             request.Estado,
-            request.ModificadoPor), ct);
+            _currentUser.GetUserName()), ct);
 
         return Ok(result);
     }
