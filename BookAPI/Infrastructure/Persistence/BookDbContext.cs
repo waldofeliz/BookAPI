@@ -16,6 +16,8 @@ public sealed class BookDbContext : IdentityDbContext<ApplicationUser, IdentityR
 
     public DbSet<RefreshToken> RefreshTokens => Set<RefreshToken>();
 
+    public DbSet<Editora> Editoras => Set<Editora>();
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);

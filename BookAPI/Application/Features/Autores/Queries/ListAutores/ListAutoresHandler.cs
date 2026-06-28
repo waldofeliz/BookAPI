@@ -28,7 +28,7 @@ public sealed class ListAutoresHandler: IRequestHandler<ListAutoresQuery, IReadO
             .OrderByDescending(b => b.Nombre)
             .Skip((page - 1) * pageSize)
             .Take(pageSize)
-            .Select(b => new AutorDto(b.Id, b.Nombre, b.Apellido, b.Cumpleanio, b.Biografia))
+            .Select(b => new AutorDto(b.Id, b.Nombre, b.Apellido, b.Cumpleanio, b.Biografia, b.Nacionalidad))
             .ToListAsync(ct);
         
         return items;

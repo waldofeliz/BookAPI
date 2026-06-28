@@ -10,5 +10,10 @@ public sealed record UpdateLibroCommand(
     DateTime PublicadoEn,
     string? Descripcion,
     string? ModificadoPor,
-    bool Estado
+    bool Estado,
+    string? CoverImageUrl,
+    string? Lenguaje,
+    int Paginas,
+    string? Edicion,
+    string? SubTitulo
 ) : IRequest<LibroDto>;

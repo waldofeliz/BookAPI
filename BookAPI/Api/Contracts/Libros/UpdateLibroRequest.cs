@@ -6,5 +6,10 @@ public sealed record UpdateLibroRequest(
     DateTime PublicadoEn,
     string? Descripcion,
     string? ModificadoPor,
-    bool Estado
+    bool Estado,
+    string? SubTitulo,
+    string? CoverImageUrl,
+    string? Edicion,
+    int Paginas,
+    string? Lenguaje
 );

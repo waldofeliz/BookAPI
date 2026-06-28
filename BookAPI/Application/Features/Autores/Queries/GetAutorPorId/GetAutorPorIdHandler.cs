@@ -15,6 +15,6 @@ public sealed class GetAutorPorIdHandler: IRequestHandler<GetAutorPorIdQuery, Au
         var autor = await _repo.GetByIdAsync(request.Id, cts);
         if (autor is null) return null;
 
-        return new AutorDto(autor.Id, autor.Nombre, autor.Apellido, autor.Cumpleanio, autor.Biografia);
+        return new AutorDto(autor.Id, autor.Nombre, autor.Apellido, autor.Cumpleanio, autor.Biografia, autor.Nacionalidad);
     }
 }

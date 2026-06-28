@@ -27,7 +27,12 @@ public sealed class LibrosController : ControllerBase
             request.Isbn,
             request.PublicadoEn,
             request.Descripcion,
-            request.CreadoPor
+            request.CreadoPor,
+            request.CoverImageUrl,
+            request.Lenguaje,
+            request.Paginas,
+            request.Edicion,
+            request.SubTitulo
             ), ct);
 
         return CreatedAtAction(nameof(GetById), new { id = result.Id }, result);
@@ -57,7 +62,12 @@ public sealed class LibrosController : ControllerBase
             request.PublicadoEn,
             request.Descripcion,
             request.ModificadoPor,
-            request.Estado
+            request.Estado,
+            request.CoverImageUrl,
+            request.Lenguaje,
+            request.Paginas,
+            request.Edicion,
+            request.SubTitulo
         ), ct);
 
         return Ok(result);

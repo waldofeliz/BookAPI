@@ -48,7 +48,8 @@ public sealed class AutoresController : ControllerBase
             request.Apellido,
             request.Cumpleanio,
             request.Biografia,
-            request.CreadoPor), ct);
+            request.CreadoPor,
+            request.Nacionalidad), ct);
         
         return CreatedAtAction(nameof(GetById), new { id = result.Id }, result);
     }
@@ -67,7 +68,8 @@ public sealed class AutoresController : ControllerBase
             request.Cumpleanio,
             request.Biografia,
             request.ModificadoPor,
-            request.Estado), ct);
+            request.Estado,
+            request.Nacionalidad), ct);
         
         return Ok(result);
     }

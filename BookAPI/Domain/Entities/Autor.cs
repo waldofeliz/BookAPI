@@ -7,6 +7,7 @@ public sealed class Autor
     public string Apellido { get; private set; } = default;
     public string? Biografia { get; private set; }
     public DateTime Cumpleanio { get; private set; } = default;
+    public string? Nacionalidad { get; private set; }
     public bool Estado { get; private set; } = default;
     public string CreadoPor { get; private set; }
     public DateTime CreadoEn { get; private set; }
@@ -16,7 +17,7 @@ public sealed class Autor
     
     private Autor() {} //EF Core
 
-    public Autor(string nombre, string apellido, string? biografia,  DateTime cumpleanio, string creadoPor)
+    public Autor(string nombre, string apellido, string? biografia,  DateTime cumpleanio, string creadoPor, string? nacionalidad)
     {
         SetNombre(nombre);
         SetApellido(apellido);
@@ -27,9 +28,10 @@ public sealed class Autor
         CreadoPor = creadoPor;
         Estado = true;
         Version = 1;
+        Nacionalidad = nacionalidad;
     }
     
-    public void Update(string nombre, string apellido, string? biografia,  DateTime cumpleanio, string? modificadoPor, bool estado)
+    public void Update(string nombre, string apellido, string? biografia,  DateTime cumpleanio, string? modificadoPor, bool estado, string? nacionalidad)
     {
         SetNombre(nombre);
         SetApellido(apellido);
@@ -39,6 +41,7 @@ public sealed class Autor
         ModificadoEn = new DateTime().Date;
         ModificadoPor = modificadoPor;
         Estado = estado;
+        Nacionalidad = nacionalidad;
         Version++;
     }
     

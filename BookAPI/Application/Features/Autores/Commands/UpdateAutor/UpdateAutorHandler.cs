@@ -23,12 +23,12 @@ public sealed class UpdateAutorHandler : IRequestHandler<UpdateAutorCommand, Aut
         var isExists = await _repo.ExistsByNombreYApellidoAsync(request.Nombre, request.Apellido, excludeId: request.Id, ct);
         if (isExists) throw new InvalidOperationException("Ya existe un autor con el mismo nombre y apellido");
         
-        autor.Update(request.Nombre, request.Apellido, request.Biografia, request.Cumpleanio, request.ModificadoPor, request.Estado);
+        autor.Update(request.Nombre, request.Apellido, request.Biografia, request.Cumpleanio, request.ModificadoPor, request.Estado, request.Nacionalidad);
         
         _repo.Update(autor);
 
         await _uow.SaveChangesAsync(ct);
         
-        return new AutorDto(autor.Id, autor.Nombre, autor.Apellido, autor.Cumpleanio, autor.Biografia);
+        return new AutorDto(autor.Id, autor.Nombre, autor.Apellido, autor.Cumpleanio, autor.Biografia, autor.Nacionalidad);
     }
 }

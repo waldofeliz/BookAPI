@@ -6,5 +6,6 @@ public sealed record AutorDto
     string Nombre,
     string Apellido,
     DateTime Cumpleanio,
-    string? Biografia
+    string? Biografia,
+    string? Nacionalidad
 );

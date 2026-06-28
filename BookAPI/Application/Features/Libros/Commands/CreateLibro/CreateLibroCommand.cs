@@ -8,5 +8,10 @@ public sealed record CreateLibroCommand(
     string Isbn,
     DateTime PublicadoEn,
     string? Descripcion,
-    string CreadoPor
+    string CreadoPor,
+    string? CoverImageUrl,
+    string? Lenguaje,
+    int Paginas,
+    string? Edicion,
+    string? SubTitulo
 ) : IRequest<LibroDto>;

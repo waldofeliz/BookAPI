@@ -21,13 +21,13 @@ public sealed class UpdateLibroHandler : IRequestHandler<UpdateLibroCommand, Lib
                    ?? throw new KeyNotFoundException("Libro no encontrado");
 
         var isExists = await _repo.ExistsByIsbnAsync(request.Isbn, excludeId: request.Id, ct);
-        if(isExists) throw new InvalidOperationException("Ya existe un libro con el mismo ISBN.");
-        
-        libro.Update(request.Titulo, request.Isbn, request.PublicadoEn, request.Descripcion, request.ModificadoPor, request.Estado);
-        
+        if (isExists) throw new InvalidOperationException("Ya existe un libro con el mismo ISBN.");
+
+        libro.Update(request.Titulo, request.Isbn, request.PublicadoEn, request.Descripcion, request.ModificadoPor, request.Estado, request.Lenguaje, request.Paginas, request.Edicion, request.CoverImageUrl);
+
         _repo.Update(libro);
         await _uow.SaveChangesAsync(ct);
-        
-        return new LibroDto(libro.Id, libro.Titulo, libro.Isbn, libro.PublicadoEn, libro.Descripcion);
+
+        return new LibroDto(libro.Id, libro.Titulo, libro.Isbn, libro.PublicadoEn, libro.Descripcion, libro.CoverImageUrl, libro.Lenguaje, libro.Paginas, libro.Edicion, libro.SubTitulo);
     }
 }

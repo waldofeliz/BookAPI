@@ -21,11 +21,11 @@ public sealed class CreateAutorHandler : IRequestHandler<CreateAutorCommand, Aut
         var exists = await _repo.ExistsByNombreYApellidoAsync(request.Nombre, request.Apellido, excludeId: null, ct);
         if (exists) throw new InvalidOperationException("Existe un autor con el mismo nombre y apellido");
         
-        var autor = new Autor(request.Nombre, request.Apellido, request.Biografia, request.Cumpleanio, request.CreadoPor);
+        var autor = new Autor(request.Nombre, request.Apellido, request.Biografia, request.Cumpleanio, request.CreadoPor, request.Nacionalidad);
         
         await _repo.AddAsync(autor, ct);
         await _uow.SaveChangesAsync(ct);
 
-        return new AutorDto(autor.Id, autor.Nombre, autor.Apellido, autor.Cumpleanio, autor.Biografia);
+        return new AutorDto(autor.Id, autor.Nombre, autor.Apellido, autor.Cumpleanio, autor.Biografia, autor.Nacionalidad);
     }
 }

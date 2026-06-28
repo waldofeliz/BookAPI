@@ -9,8 +9,8 @@ namespace Application.Features.Libros.Queries.ListLibros;
 public sealed class ListLibrosHandler : IRequestHandler<ListLibrosQuery, IReadOnlyList<LibroDto>>
 {
     private readonly ILibroRepository _repo;
-    
-    public ListLibrosHandler(ILibroRepository repo) =>  _repo = repo;
+
+    public ListLibrosHandler(ILibroRepository repo) => _repo = repo;
 
     public async Task<IReadOnlyList<LibroDto>> Handle(ListLibrosQuery request, CancellationToken ct)
     {
@@ -29,7 +29,7 @@ public sealed class ListLibrosHandler : IRequestHandler<ListLibrosQuery, IReadOn
             .OrderByDescending(b => b.PublicadoEn)
             .Skip((page - 1) * pageSize)
             .Take(pageSize)
-            .Select(b => new LibroDto(b.Id, b.Titulo, b.Isbn, b.PublicadoEn, b.Descripcion))
+            .Select(b => new LibroDto(b.Id, b.Titulo, b.Isbn, b.PublicadoEn, b.Descripcion, b.CoverImageUrl, b.Lenguaje, b.Paginas, b.Edicion, b.SubTitulo))
             .ToListAsync(ct);
         return items;
     }

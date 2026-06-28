@@ -22,5 +22,28 @@ public sealed class AutorConfiguration: IEntityTypeConfiguration<Autor>
 
         builder.Property(x => x.Cumpleanio)
             .IsRequired();
+
+        builder.Property(x => x.Nacionalidad);
+
+        builder.Property(x => x.Biografia);
+
+        builder.Property(x => x.Estado)
+            .IsRequired();
+        
+        builder.Property(x => x.CreadoPor)
+            .HasMaxLength(100)
+            .IsRequired();
+        
+        builder.Property(x => x.CreadoEn)
+            .IsRequired();
+        
+        builder.Property(x => x.ModificadoPor)
+            .HasMaxLength(100);
+        
+        builder.Property(x => x.ModificadoEn);
+        
+        builder.Property(x => x.Version)
+            .IsConcurrencyToken()
+            .IsRequired();
     }
 }

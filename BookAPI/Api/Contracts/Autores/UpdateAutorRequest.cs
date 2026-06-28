@@ -5,6 +5,7 @@ public sealed record UpdateAutorRequest(
     string Apellido,
     DateTime Cumpleanio,
     string? Biografia,
+    string? Nacionalidad,
     string ModificadoPor,
     bool Estado
     );

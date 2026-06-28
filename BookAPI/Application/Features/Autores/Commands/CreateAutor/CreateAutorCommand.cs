@@ -8,5 +8,6 @@ public sealed record CreateAutorCommand(
     string Apellido,
     DateTime Cumpleanio,
     string? Biografia,
-    string CreadoPor
+    string CreadoPor,
+    string? Nacionalidad
     ): IRequest<AutorDto>;

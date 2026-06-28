@@ -4,42 +4,31 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Infrastructure.Persistence.Configurations;
 
-public sealed class LibroConfiguration : IEntityTypeConfiguration<Libro>
+public sealed class EditoraConfiguration: IEntityTypeConfiguration<Editora>
 {
-    public void Configure(EntityTypeBuilder<Libro> builder)
+    public void Configure(EntityTypeBuilder<Editora> builder)
     {
-        builder.ToTable("Libros");
+        builder.ToTable("Editoras");
         
         builder.HasKey(x => x.Id);
         
-        builder.Property(x => x.Titulo)
-            .HasMaxLength(250)
-            .IsRequired();
-        
-        builder.Property(x => x.SubTitulo)
-            .HasMaxLength(250);
-
-        builder.Property(x => x.Isbn)
-            .HasMaxLength(17)
+        builder.Property(x => x.Nombre)
+            .HasMaxLength(100)
             .IsRequired();
 
-        builder.HasIndex(x => x.Isbn)
-            .IsUnique();
-        
-        builder.Property(x => x.PublicadoEn);
-        
-       builder.HasIndex(x => x.Paginas)
-            .IsUnique(false);
+        builder.Property(x => x.Descripcion);
 
-        builder.Property(x => x.Lenguaje)
+        builder.Property(x => x.Direccion);
+
+        builder.Property(x => x.Pais)
             .HasMaxLength(50);
-        
-        builder.Property(x => x.Edicion)
-            .HasMaxLength(50);
-        
-        builder.Property(x => x.CoverImageUrl)
+
+        builder.Property( x => x.Website)
             .HasMaxLength(500);
-        
+
+        builder.Property(x => x.Telefono)
+            .HasMaxLength(20);        
+
         builder.Property(x => x.Estado)
             .IsRequired();
         

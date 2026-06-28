@@ -21,11 +21,11 @@ public sealed class CreateLibroHandler : IRequestHandler<CreateLibroCommand, Lib
         var exists = await _repo.ExistsByIsbnAsync(request.Isbn, excludeId: null, ct);
         if (exists) throw new InvalidOperationException("Existe un libro con el mismo ISBN");
 
-        var libro = new Libro(request.Titulo, request.Isbn, request.PublicadoEn, request.Descripcion, request.CreadoPor);
+        var libro = new Libro(request.Titulo, request.Isbn, request.PublicadoEn, request.Descripcion, request.CreadoPor, request.Lenguaje, request.Paginas, request.Edicion, request.CoverImageUrl);
 
         await _repo.AddAsync(libro, ct);
         await _uow.SaveChangesAsync(ct);
-        
-        return new LibroDto(libro.Id, libro.Titulo, libro.Isbn, libro.PublicadoEn, libro.Descripcion);
+
+        return new LibroDto(libro.Id, libro.Titulo, libro.Isbn, libro.PublicadoEn, libro.Descripcion, libro.CoverImageUrl, libro.Lenguaje, libro.Paginas, libro.Edicion, libro.SubTitulo);
     }
 }
