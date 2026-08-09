@@ -16,6 +16,7 @@ flowchart TB
 | Nivel | Proyecto | Framework | Alcance |
 |-------|----------|-----------|---------|
 | Unitario | `UnitTests` | NUnit 4.2.2 | Dominio, validadores |
+| Arquitectura | `ArchitectureTests` | NUnit + NetArchTest.Rules | Dependencias entre capas y módulos |
 | Integración | `IntegrationTests` | NUnit + Mvc.Testing + Testcontainers | Flujo E2E completo |
 
 ## Ejecutar pruebas
@@ -28,6 +29,9 @@ dotnet test
 
 # Solo unitarias
 dotnet test UnitTests/UnitTests.csproj
+
+# Reglas de arquitectura (sin Docker)
+dotnet test ArchitectureTests/ArchitectureTests.csproj
 
 # Solo integración (requiere Docker)
 dotnet test IntegrationTests/IntegrationTests.csproj

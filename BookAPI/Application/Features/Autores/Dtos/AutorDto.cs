@@ -7,5 +7,8 @@ public sealed record AutorDto
     string Apellido,
     DateTime Cumpleanio,
     string? Biografia,
-    string? Nacionalidad
+    string? Nacionalidad,
+    DateTime? FechaFallecimiento,
+    string? FotoUrl,
+    string? SitioWeb
 );

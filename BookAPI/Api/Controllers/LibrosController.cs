@@ -26,6 +26,7 @@ public sealed class LibrosController : ControllerBase
     }
 
     [HttpPost]
+    [Authorize(Policy = AuthorizationPolicies.CanManageCatalog)]
     public async Task<IActionResult> Create([FromBody] CreateLibroRequest request, CancellationToken ct)
     {
         var result = await _mediator.Send(new CreateLibroCommand(
@@ -47,6 +48,7 @@ public sealed class LibrosController : ControllerBase
     }
 
     [HttpGet("{id:guid}")]
+    [Authorize(Policy = AuthorizationPolicies.CanReadCatalog)]
     public async Task<IActionResult> GetById([FromRoute] Guid id, CancellationToken ct)
     {
         var result = await _mediator.Send(new GetLibroPorIdQuery(id), ct);
@@ -54,6 +56,7 @@ public sealed class LibrosController : ControllerBase
     }
 
     [HttpGet]
+    [Authorize(Policy = AuthorizationPolicies.CanReadCatalog)]
     public async Task<IActionResult> List([FromQuery] int page = 1, [FromQuery] int pageSize = 10, [FromQuery] string? search = null, CancellationToken ct = default)
     {
         var result = await _mediator.Send(new ListLibrosQuery(page, pageSize, search), ct);
@@ -61,6 +64,7 @@ public sealed class LibrosController : ControllerBase
     }
 
     [HttpPut("{id:guid}")]
+    [Authorize(Policy = AuthorizationPolicies.CanManageCatalog)]
     public async Task<IActionResult> Update([FromRoute] Guid id, [FromBody] UpdateLibroRequest request, CancellationToken ct)
     {
         var result = await _mediator.Send(new UpdateLibroCommand(
@@ -84,6 +88,7 @@ public sealed class LibrosController : ControllerBase
     }
 
     [HttpDelete("{id:guid}")]
+    [Authorize(Policy = AuthorizationPolicies.CanManageCatalog)]
     public async Task<IActionResult> Delete([FromRoute] Guid id, CancellationToken ct)
     {
         await _mediator.Send(new DeleteLibroCommand(id), ct);

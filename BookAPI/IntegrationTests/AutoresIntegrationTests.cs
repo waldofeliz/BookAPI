@@ -2,6 +2,7 @@ using System.Net;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using System.Text.Json;
+using Application.Abstractions.Security;
 using Testcontainers.MsSql;
 
 namespace IntegrationTests;
@@ -39,7 +40,7 @@ public sealed class AutoresIntegrationTests
     [Test]
     public async Task CrudAutor_FlujoCompleto_RespetaContratoHttp()
     {
-        var token = await RegisterAndLoginAsync($"crud_{Guid.NewGuid():N}@test.com");
+        var token = await RegisterAndLoginAsync($"crud_{Guid.NewGuid():N}@test.com", AppRoles.Editor);
 
         // Create
         var cumpleanio = new DateTime(1980, 5, 15);
@@ -128,7 +129,7 @@ public sealed class AutoresIntegrationTests
     [Test]
     public async Task CreateAutor_ConNombreDuplicado_Retorna409()
     {
-        var token = await RegisterAndLoginAsync($"dup_{Guid.NewGuid():N}@test.com");
+        var token = await RegisterAndLoginAsync($"dup_{Guid.NewGuid():N}@test.com", AppRoles.Editor);
         var payload = new
         {
             nombre = "Isabel",
@@ -150,7 +151,7 @@ public sealed class AutoresIntegrationTests
     [Test]
     public async Task CreateAutor_ConDatosInvalidos_Retorna400()
     {
-        var token = await RegisterAndLoginAsync($"invalid_{Guid.NewGuid():N}@test.com");
+        var token = await RegisterAndLoginAsync($"invalid_{Guid.NewGuid():N}@test.com", AppRoles.Editor);
 
         using var request = AuthorizedJsonPost("/api/v1/Autores", token, new
         {
@@ -175,7 +176,7 @@ public sealed class AutoresIntegrationTests
     [Test]
     public async Task UpdateAutor_CuandoNoExiste_Retorna404()
     {
-        var token = await RegisterAndLoginAsync($"upd404_{Guid.NewGuid():N}@test.com");
+        var token = await RegisterAndLoginAsync($"upd404_{Guid.NewGuid():N}@test.com", AppRoles.Editor);
 
         using var request = AuthorizedJsonPut($"/api/v1/Autores/{Guid.NewGuid()}", token, new
         {
@@ -194,7 +195,7 @@ public sealed class AutoresIntegrationTests
     [Test]
     public async Task DeleteAutor_CuandoNoExiste_Retorna404()
     {
-        var token = await RegisterAndLoginAsync($"del404_{Guid.NewGuid():N}@test.com");
+        var token = await RegisterAndLoginAsync($"del404_{Guid.NewGuid():N}@test.com", AppRoles.Editor);
 
         using var request = new HttpRequestMessage(HttpMethod.Delete, $"/api/v1/Autores/{Guid.NewGuid()}");
         request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
@@ -203,13 +204,16 @@ public sealed class AutoresIntegrationTests
         Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.NotFound));
     }
 
-    private async Task<string> RegisterAndLoginAsync(string email)
+    private async Task<string> RegisterAndLoginAsync(string email, string? role = null)
     {
         var password = Environment.GetEnvironmentVariable("BOOKAPI_TEST_PASSWORD")
                        ?? $"TestPass_{Guid.NewGuid():N}!Aa1";
 
         var registerResponse = await _client.PostAsJsonAsync("/api/v1/auth/register", new { email, password });
         registerResponse.EnsureSuccessStatusCode();
+
+        if (role is not null && !string.Equals(role, AppRoles.Reader, StringComparison.Ordinal))
+            await AuthTestHelper.AssignRoleAsync(_factory, email, role);
 
         var loginResponse = await _client.PostAsJsonAsync("/api/v1/auth/login", new { email, password });
         loginResponse.EnsureSuccessStatusCode();

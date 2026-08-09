@@ -2,12 +2,27 @@
 
 ## Modelo de seguridad
 
-BookAPI implementa un modelo de **autenticación basada en tokens** con dos niveles:
+BookAPI implementa un modelo de **autenticación basada en tokens** con **autorización por roles**:
 
-1. **Access Token (JWT):** corta duración, se envía en cada petición protegida
+1. **Access Token (JWT):** corta duración, incluye roles en claims
 2. **Refresh Token:** larga duración, opaco, almacenado hasheado en BD
 
-No hay autorización basada en roles actualmente; todos los usuarios autenticados tienen acceso completo al CRUD.
+### Roles
+
+| Rol | Permisos |
+|-----|----------|
+| **Admin** | Lectura y escritura del catálogo + promover usuarios a Admin |
+| **Editor** | Lectura y escritura del catálogo (rol por defecto al registrarse) |
+| **Reader** | Solo lectura del catálogo |
+
+### Políticas de autorización
+
+| Política | Roles permitidos |
+|----------|------------------|
+| `CanReadCatalog` | Admin, Editor, Reader |
+| `CanManageCatalog` | Admin, Editor |
+
+Endpoints de administración (`/api/v1/Admin/*`) requieren rol **Admin**.
 
 ## Autenticación JWT
 
@@ -18,7 +33,7 @@ Servicio: `Infrastructure/Security/JwtTokenService.cs`
 | Parámetro | Valor |
 |-----------|-------|
 | Algoritmo | HMAC-SHA256 |
-| Claims | `sub`, `jti`, `email`, `nameidentifier`, `name` |
+| Claims | `sub`, `jti`, `email`, `nameidentifier`, `name`, `role` |
 | Validación | Issuer, Audience, SigningKey, Lifetime |
 | ClockSkew | 1 minuto |
 
@@ -28,7 +43,26 @@ Servicio: `Infrastructure/Security/JwtTokenService.cs`
 Authorization: Bearer eyJhbGciOiJIUzI1NiIs...
 ```
 
-Endpoints protegidos usan `[Authorize]`. Sin token o con token inválido → **401**.
+Sin token o token inválido → **401**. Rol insuficiente → **403**.
+
+## Rate limiting (auth)
+
+Endpoints `register`, `login` y `refresh` tienen límite por IP (ventana fija, configurable en `RateLimiting:Auth`). Complementa el lockout de Identity.
+
+| Configuración | Default |
+|---------------|---------|
+| `PermitLimit` | 10 |
+| `WindowSeconds` | 60 |
+
+Respuesta al exceder límite: **429 Too Many Requests**.
+
+## Bootstrap de administradores
+
+En `Admin:BootstrapEmails` (o variables `Admin__BootstrapEmails__N`) se pueden listar emails de usuarios **ya registrados** que se promoverán a Admin al arranque (`AdminBootstrapSeeder`).
+
+Promoción manual: `POST /api/v1/Admin/users/promote` (solo Admin).
+
+Asignación de rol de catálogo: `POST /api/v1/Admin/users/assign-role` con `Editor` o `Reader` (solo Admin).
 
 ## Refresh Token — Rotación segura
 
@@ -106,18 +140,15 @@ Errores se registran con Serilog incluyendo método y ruta HTTP.
 
 | Riesgo | Estado | Notas |
 |--------|--------|-------|
-| A01 Broken Access Control | ⚠️ Parcial | Auth sí; sin roles granulares |
+| A01 Broken Access Control | ✅ Mitigado | Roles, políticas y endpoint Admin protegido |
 | A02 Cryptographic Failures | ✅ Mitigado | JWT firmado, refresh hasheado |
 | A03 Injection | ✅ Mitigado | EF Core parametrizado, FluentValidation |
-| A04 Insecure Design | ⚠️ Parcial | Sin rate limiting en auth |
+| A04 Insecure Design | ✅ Mitigado | Rate limiting en auth |
 | A05 Security Misconfiguration | ✅ Mitigado | Secretos fuera de appsettings base |
 | A07 Identification Failures | ✅ Mitigado | Identity + lockout + rotación |
 | A09 Logging Failures | ✅ Mitigado | Serilog configurado |
 
 ## Mejoras de seguridad planificadas
 
-1. **Rate limiting** en `/Auth/login` y `/Auth/register`
-2. **Roles:** Admin, Librarian, Reader
-3. **Políticas de autorización** granulares
-4. **HTTPS obligatorio** en Production
-5. **Auditoría de eventos de seguridad** (login fallido, refresh reutilizado)
+1. **HTTPS obligatorio** en Production
+2. **Auditoría de eventos de seguridad** (login fallido, refresh reutilizado)

@@ -1,3 +1,4 @@
+using Api.Extensions;
 using Api.Middlewares;
 using Api.Services;
 using Application;
@@ -60,7 +61,8 @@ try
 
     builder.Services.AddApplication();
     builder.Services.AddInfrastructure(builder.Configuration);
-    builder.Services.AddAuthorization();
+    builder.Services.AddBookApiAuthorization();
+    builder.Services.AddBookApiRateLimiting(builder.Configuration);
 
     var corsOrigins = builder.Configuration.GetSection("Cors:AllowedOrigins").Get<string[]>() ?? [];
     builder.Services.AddCors(options =>
@@ -102,6 +104,7 @@ try
     app.UseSerilogRequestLogging();
     app.UseHttpsRedirection();
     app.UseCors("DefaultCors");
+    app.UseRateLimiter();
     app.UseAuthentication();
     app.UseAuthorization();
     app.UseMiddleware<ExceptionHandlingMiddleware>();

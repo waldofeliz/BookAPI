@@ -6,5 +6,8 @@ public sealed record UpdateAutorRequest(
     DateTime Cumpleanio,
     string? Biografia,
     string? Nacionalidad,
+    DateTime? FechaFallecimiento,
+    string? FotoUrl,
+    string? SitioWeb,
     bool Estado
 );

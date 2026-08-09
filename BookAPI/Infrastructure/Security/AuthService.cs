@@ -4,7 +4,6 @@ using Application.Features.Auth.Dtos;
 using Domain.Entities;
 using Infrastructure.Identity;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 
 namespace Infrastructure.Security;
@@ -12,6 +11,7 @@ namespace Infrastructure.Security;
 public sealed class AuthService : IAuthService
 {
     private readonly UserManager<ApplicationUser> _users;
+    private readonly RoleManager<IdentityRole<Guid>> _roles;
     private readonly SignInManager<ApplicationUser> _signIn;
     private readonly JwtTokenService _jwt;
     private readonly IRefreshTokenRepository _refreshTokens;
@@ -20,6 +20,7 @@ public sealed class AuthService : IAuthService
 
     public AuthService(
         UserManager<ApplicationUser> users,
+        RoleManager<IdentityRole<Guid>> roles,
         SignInManager<ApplicationUser> signIn,
         JwtTokenService jwt,
         IRefreshTokenRepository refreshTokens,
@@ -27,6 +28,7 @@ public sealed class AuthService : IAuthService
         IOptions<JwtOptions> jwtOpt)
     {
         _users = users;
+        _roles = roles;
         _signIn = signIn;
         _jwt = jwt;
         _refreshTokens = refreshTokens;
@@ -48,6 +50,17 @@ public sealed class AuthService : IAuthService
         {
             var msg = string.Join(" ", result.Errors.Select(e => e.Description));
             throw new InvalidOperationException(string.IsNullOrWhiteSpace(msg) ? "No se pudo registrar el usuario." : msg);
+        }
+
+        await EnsureRoleExistsAsync(AppRoles.Reader);
+
+        var roleResult = await _users.AddToRoleAsync(user, AppRoles.Reader);
+        if (!roleResult.Succeeded)
+        {
+            var msg = string.Join(" ", roleResult.Errors.Select(e => e.Description));
+            throw new InvalidOperationException(string.IsNullOrWhiteSpace(msg)
+                ? "No se pudo asignar el rol al usuario."
+                : msg);
         }
 
         return await IssueTokensAsync(user, ipAddress, ct);
@@ -105,7 +118,7 @@ public sealed class AuthService : IAuthService
 
         await _uow.SaveChangesAsync(ct);
 
-        var access = _jwt.CreateAccessToken(user);
+        var access = await _jwt.CreateAccessTokenAsync(user, ct);
         var accessExpires = _jwt.GetAccessTokenExpiryUtc();
 
         return new AuthTokensDto(access, newPlain, accessExpires);
@@ -121,9 +134,24 @@ public sealed class AuthService : IAuthService
         await _refreshTokens.AddAsync(entity, ct);
         await _uow.SaveChangesAsync(ct);
 
-        var access = _jwt.CreateAccessToken(user);
+        var access = await _jwt.CreateAccessTokenAsync(user, ct);
         var accessExpires = _jwt.GetAccessTokenExpiryUtc();
 
         return new AuthTokensDto(access, plain, accessExpires);
+    }
+
+    private async Task EnsureRoleExistsAsync(string roleName)
+    {
+        if (await _roles.RoleExistsAsync(roleName))
+            return;
+
+        var createResult = await _roles.CreateAsync(new IdentityRole<Guid>(roleName));
+        if (!createResult.Succeeded)
+        {
+            var msg = string.Join(" ", createResult.Errors.Select(e => e.Description));
+            throw new InvalidOperationException(string.IsNullOrWhiteSpace(msg)
+                ? $"No se pudo crear el rol '{roleName}'."
+                : msg);
+        }
     }
 }

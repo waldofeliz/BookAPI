@@ -26,6 +26,7 @@ public sealed class EditorasController : ControllerBase
     }
 
     [HttpGet("{id:guid}")]
+    [Authorize(Policy = AuthorizationPolicies.CanReadCatalog)]
     public async Task<IActionResult> GetById([FromRoute] Guid id, CancellationToken ct)
     {
         var result = await _mediator.Send(new GetEditoraPorIdQuery(id), ct);
@@ -33,6 +34,7 @@ public sealed class EditorasController : ControllerBase
     }
 
     [HttpGet]
+    [Authorize(Policy = AuthorizationPolicies.CanReadCatalog)]
     public async Task<IActionResult> List(
         [FromQuery] int page = 1,
         [FromQuery] int pageSize = 10,
@@ -44,6 +46,7 @@ public sealed class EditorasController : ControllerBase
     }
 
     [HttpPost]
+    [Authorize(Policy = AuthorizationPolicies.CanManageCatalog)]
     public async Task<IActionResult> Create([FromBody] CreateEditoraRequest request, CancellationToken ct)
     {
         var result = await _mediator.Send(new CreateEditoraCommand(
@@ -59,6 +62,7 @@ public sealed class EditorasController : ControllerBase
     }
 
     [HttpPut("{id:guid}")]
+    [Authorize(Policy = AuthorizationPolicies.CanManageCatalog)]
     public async Task<IActionResult> Update(
         [FromRoute] Guid id,
         [FromBody] UpdateEditoraRequest request,
@@ -79,6 +83,7 @@ public sealed class EditorasController : ControllerBase
     }
 
     [HttpDelete("{id:guid}")]
+    [Authorize(Policy = AuthorizationPolicies.CanManageCatalog)]
     public async Task<IActionResult> Delete([FromRoute] Guid id, CancellationToken ct)
     {
         await _mediator.Send(new DeleteEditoraCommand(id), ct);

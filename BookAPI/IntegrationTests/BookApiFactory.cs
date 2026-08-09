@@ -9,10 +9,12 @@ namespace IntegrationTests;
 public sealed class BookApiFactory : WebApplicationFactory<Program>
 {
     private readonly string _connectionString;
+    private readonly int? _authPermitLimit;
 
-    public BookApiFactory(string connectionString)
+    public BookApiFactory(string connectionString, int? authPermitLimit = null)
     {
         _connectionString = connectionString;
+        _authPermitLimit = authPermitLimit;
     }
 
     public async Task MigrateDatabaseAsync()
@@ -30,6 +32,9 @@ public sealed class BookApiFactory : WebApplicationFactory<Program>
         builder.UseSetting("Jwt:Audience", "BookAPI.Clients");
         builder.UseSetting("Jwt:RequireHttpsMetadata", "false");
         builder.UseSetting("Cors:AllowedOrigins:0", "http://localhost");
+        builder.UseSetting("RateLimiting:Auth:PermitLimit",
+            (_authPermitLimit ?? 10_000).ToString());
+        builder.UseSetting("RateLimiting:Auth:WindowSeconds", "60");
 
         builder.ConfigureServices(services =>
         {

@@ -21,6 +21,9 @@ public sealed class GetAutorPorIdHandler : IRequestHandler<GetAutorPorIdQuery, A
             autor.Apellido,
             autor.Cumpleanio,
             autor.Biografia,
-            autor.Nacionalidad);
+            autor.Nacionalidad,
+            autor.FechaFallecimiento,
+            autor.FotoUrl,
+            autor.SitioWeb);
     }
 }

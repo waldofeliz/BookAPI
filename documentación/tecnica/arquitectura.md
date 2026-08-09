@@ -134,12 +134,14 @@ IntegrationTests → Api
 | EF Core con configuraciones Fluent | Mapeo explícito por entidad en `Configurations/` |
 | Serilog | Logging estructurado configurable por entorno |
 | Testcontainers | Pruebas de integración con SQL Server real en Docker |
+| Monolito modular | Ver [ADR-001](./adr/001-monolito-modular.md); sin microservicios en fase actual |
+| ArchitectureTests (NetArchTest) | Reglas de dependencia entre capas y módulos verticales |
 
 ## Deuda técnica conocida
 
-| Item | Impacto | Recomendación |
-|------|---------|---------------|
-| Queries usan EF Core directamente en Application | Acoplamiento lectura/infra | Extraer a repositorios o proyecciones |
-| Sin roles granulares | Seguridad limitada | Implementar `[Authorize(Roles)]` |
-| Sin rate limiting en auth | Riesgo de fuerza bruta | `AddRateLimiter` en endpoints de login |
-| Migraciones vacías duplicadas | Ruido en historial | Eliminar migraciones sin cambios |
+| Item | Impacto | Estado |
+|------|---------|--------|
+| Queries EF en Application | Acoplamiento lectura/infra | ✅ Resuelto — `ListAsync` en repositorios |
+| Sin roles granulares | Seguridad limitada | ✅ Resuelto — Admin, Editor, Reader |
+| Sin rate limiting en auth | Fuerza bruta | ✅ Resuelto — `RateLimiting:Auth` |
+| Migraciones vacías duplicadas | Ruido en historial | Pendiente — limpiar historial EF |

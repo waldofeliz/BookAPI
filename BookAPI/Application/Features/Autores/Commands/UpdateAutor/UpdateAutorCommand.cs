@@ -11,5 +11,8 @@ public sealed record UpdateAutorCommand(
     string? Biografia,
     string? ModificadoPor,
     bool Estado,
-    string? Nacionalidad
+    string? Nacionalidad,
+    DateTime? FechaFallecimiento,
+    string? FotoUrl,
+    string? SitioWeb
 ): IRequest<AutorDto>;

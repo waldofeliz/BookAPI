@@ -3,6 +3,7 @@ using Application.Abstractions.Persistence;
 using Application.Abstractions.Security;
 using Infrastructure.Identity;
 using Infrastructure.Persistence;
+using Microsoft.Extensions.Hosting;
 using Infrastructure.Persistence.Repositories;
 using Infrastructure.Security;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -48,6 +49,7 @@ public static class DependencyInjection
             .AddDefaultTokenProviders();
 
         services.Configure<JwtOptions>(configuration.GetSection(JwtOptions.SectionName));
+        services.Configure<AdminBootstrapOptions>(configuration.GetSection(AdminBootstrapOptions.SectionName));
         var jwt = configuration.GetSection(JwtOptions.SectionName).Get<JwtOptions>()
                   ?? throw new InvalidOperationException("La sección Jwt no está configurada.");
 
@@ -56,8 +58,11 @@ public static class DependencyInjection
 
         var signingKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwt.SecretKey));
 
-        services.AddSingleton<JwtTokenService>();
+        services.AddScoped<JwtTokenService>();
         services.AddScoped<IAuthService, AuthService>();
+        services.AddScoped<IUserRoleService, UserRoleService>();
+        services.AddHostedService<RoleSeeder>();
+        services.AddHostedService<AdminBootstrapSeeder>();
 
         services.AddAuthentication(options =>
             {

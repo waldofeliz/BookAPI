@@ -26,6 +26,7 @@ public sealed class AutoresController : ControllerBase
     }
 
     [HttpGet("{id:guid}")]
+    [Authorize(Policy = AuthorizationPolicies.CanReadCatalog)]
     public async Task<IActionResult> GetById([FromRoute] Guid id, CancellationToken ct)
     {
         var result = await _mediator.Send(new GetAutorPorIdQuery(id), ct);
@@ -33,6 +34,7 @@ public sealed class AutoresController : ControllerBase
     }
 
     [HttpGet]
+    [Authorize(Policy = AuthorizationPolicies.CanReadCatalog)]
     public async Task<IActionResult> List([FromQuery] int page = 1, [FromQuery] int pageSize = 10,
         [FromQuery] string? search = null, CancellationToken ct = default)
     {
@@ -41,6 +43,7 @@ public sealed class AutoresController : ControllerBase
     }
 
     [HttpPost]
+    [Authorize(Policy = AuthorizationPolicies.CanManageCatalog)]
     public async Task<IActionResult> Create([FromBody] CreateAutorRequest request, CancellationToken ct)
     {
         var result = await _mediator.Send(new CreateAutorCommand(
@@ -49,12 +52,16 @@ public sealed class AutoresController : ControllerBase
             request.Cumpleanio,
             request.Biografia,
             _currentUser.GetUserName(),
-            request.Nacionalidad), ct);
+            request.Nacionalidad,
+            request.FechaFallecimiento,
+            request.FotoUrl,
+            request.SitioWeb), ct);
 
         return CreatedAtAction(nameof(GetById), new { id = result.Id }, result);
     }
 
     [HttpPut("{id:guid}")]
+    [Authorize(Policy = AuthorizationPolicies.CanManageCatalog)]
     public async Task<IActionResult> Update([FromRoute] Guid id, [FromBody] UpdateAutorRequest request,
         CancellationToken ct)
     {
@@ -66,12 +73,16 @@ public sealed class AutoresController : ControllerBase
             request.Biografia,
             _currentUser.GetUserName(),
             request.Estado,
-            request.Nacionalidad), ct);
+            request.Nacionalidad,
+            request.FechaFallecimiento,
+            request.FotoUrl,
+            request.SitioWeb), ct);
 
         return Ok(result);
     }
 
     [HttpDelete("{id:guid}")]
+    [Authorize(Policy = AuthorizationPolicies.CanManageCatalog)]
     public async Task<IActionResult> Delete([FromRoute] Guid id, CancellationToken ct)
     {
         await _mediator.Send(new DeleteAutorCommand(id), ct);

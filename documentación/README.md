@@ -23,6 +23,7 @@ Documentación oficial del proyecto **BookAPI** — API REST para la gestión de
 | [Despliegue y DevOps](./tecnica/despliegue-devops.md) | Docker, CI/CD, publicación y checklist producción |
 | [Seguridad](./tecnica/seguridad.md) | Autenticación JWT, Identity, CORS y buenas prácticas |
 | [Pruebas](./tecnica/pruebas.md) | Estrategia de testing, ejecución y cobertura |
+| [ADR-001: Monolito modular](./tecnica/adr/001-monolito-modular.md) | Decisión de no migrar a microservicios |
 
 ## Información rápida
 

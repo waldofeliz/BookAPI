@@ -54,11 +54,65 @@ Mismo contrato que register.
 
 **Response 200:** Igual que login.
 
+> **Rate limiting:** `register`, `login` y `refresh` comparten una ventana fija por IP (configurable en `RateLimiting:Auth`). Respuesta **429** al exceder el límite.
+
+---
+
+## Administración
+
+Requieren rol **Admin**.
+
+### POST `/api/v1/Admin/users/promote`
+
+Promueve un usuario existente al rol `Admin`.
+
+**Request:**
+```json
+{
+  "email": "usuario@ejemplo.com"
+}
+```
+
+| Código | Descripción |
+|--------|-------------|
+| 204 | Usuario promovido (idempotente si ya era Admin) |
+| 400 | Email inválido |
+| 401 | Sin token |
+| 403 | Sin rol Admin |
+| 404 | Usuario no encontrado |
+
+### POST `/api/v1/Admin/users/assign-role`
+
+Asigna el rol de catálogo **Editor** o **Reader** a un usuario existente. Reemplaza cualquier rol de catálogo previo (`Editor`/`Reader`) sin quitar `Admin` si lo tuviera.
+
+**Request:**
+```json
+{
+  "email": "usuario@ejemplo.com",
+  "role": "Reader"
+}
+```
+
+| Código | Descripción |
+|--------|-------------|
+| 204 | Rol asignado |
+| 400 | Email o rol inválido (solo `Editor` o `Reader`) |
+| 401 | Sin token |
+| 403 | Sin rol Admin |
+| 404 | Usuario no encontrado |
+
+**Bootstrap inicial:** configurar `Admin:BootstrapEmails` en appsettings o variables `Admin__BootstrapEmails__0` para promover admins al arranque si el usuario ya está registrado.
+
 ---
 
 ## Libros
 
-Requieren **JWT** (`[Authorize]`).
+Requieren **JWT** y políticas por operación:
+
+| Operación | Política / roles |
+|-----------|------------------|
+| GET | `CanReadCatalog` — Admin, Editor, Reader |
+| POST, PUT, DELETE | `CanManageCatalog` — Admin, Editor |
 
 ### POST `/api/v1/Libros`
 

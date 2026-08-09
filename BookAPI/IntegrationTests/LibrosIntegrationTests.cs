@@ -1,6 +1,7 @@
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using System.Text.Json;
+using Application.Abstractions.Security;
 using Testcontainers.MsSql;
 
 namespace IntegrationTests;
@@ -38,7 +39,7 @@ public sealed class LibrosIntegrationTests
     [Test]
     public async Task CreateLibro_WithEditoraAndAutores_ReturnsRelations()
     {
-        var token = await RegisterAndLoginAsync($"user_{Guid.NewGuid():N}@test.com");
+        var token = await RegisterAndLoginAsync($"user_{Guid.NewGuid():N}@test.com", AppRoles.Editor);
 
         var editoraId = await CreateEditoraAsync(token, "Penguin Books");
         var autor1Id = await CreateAutorAsync(token, "Robert", "Martin");
@@ -69,7 +70,7 @@ public sealed class LibrosIntegrationTests
         Assert.That(libro.Autores.Select(a => a.Id), Is.EquivalentTo(new[] { autor1Id, autor2Id }));
     }
 
-    private async Task<string> RegisterAndLoginAsync(string email)
+    private async Task<string> RegisterAndLoginAsync(string email, string? role = null)
     {
         var password = Environment.GetEnvironmentVariable("BOOKAPI_TEST_PASSWORD")
                        ?? $"TestPass_{Guid.NewGuid():N}!Aa1";
@@ -80,6 +81,9 @@ public sealed class LibrosIntegrationTests
             password
         });
         registerResponse.EnsureSuccessStatusCode();
+
+        if (role is not null && !string.Equals(role, AppRoles.Reader, StringComparison.Ordinal))
+            await AuthTestHelper.AssignRoleAsync(_factory, email, role);
 
         var loginResponse = await _client.PostAsJsonAsync("/api/v1/auth/login", new { email, password });
         loginResponse.EnsureSuccessStatusCode();

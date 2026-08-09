@@ -1,4 +1,5 @@
 using Api.Contracts.Auth;
+using Api.Extensions;
 using Application.Features.Auth.Commands.Login;
 using Application.Features.Auth.Commands.RefreshSession;
 using Application.Features.Auth.Commands.Register;
@@ -6,6 +7,7 @@ using Application.Features.Auth.Dtos;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 
 namespace Api.Controllers;
 
@@ -19,6 +21,7 @@ public sealed class AuthController : ControllerBase
     public AuthController(IMediator mediator) => _mediator = mediator;
 
     [HttpPost("register")]
+    [EnableRateLimiting(RateLimitingExtensions.AuthPolicyName)]
     public async Task<IActionResult> Register([FromBody] RegisterRequest request, CancellationToken ct)
     {
         var ip = HttpContext.Connection.RemoteIpAddress?.ToString();
@@ -27,6 +30,7 @@ public sealed class AuthController : ControllerBase
     }
 
     [HttpPost("login")]
+    [EnableRateLimiting(RateLimitingExtensions.AuthPolicyName)]
     public async Task<IActionResult> Login([FromBody] LoginRequest request, CancellationToken ct)
     {
         var ip = HttpContext.Connection.RemoteIpAddress?.ToString();
@@ -35,6 +39,7 @@ public sealed class AuthController : ControllerBase
     }
 
     [HttpPost("refresh")]
+    [EnableRateLimiting(RateLimitingExtensions.AuthPolicyName)]
     public async Task<IActionResult> Refresh([FromBody] RefreshRequest request, CancellationToken ct)
     {
         var ip = HttpContext.Connection.RemoteIpAddress?.ToString();

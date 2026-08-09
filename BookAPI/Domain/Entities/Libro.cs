@@ -90,7 +90,7 @@ public sealed class Libro
     private void SetTitulo(string titulo)
     {
         if (string.IsNullOrWhiteSpace(titulo)) throw new ArgumentException("El título es requerido..");
-        if (titulo.Length > 200) throw new ArgumentException("El título debe tener entre 200 caracteres.");
+        if (titulo.Length > 250) throw new ArgumentException("El título no puede exceder 250 caracteres.");
         Titulo = titulo.Trim();
     }
 

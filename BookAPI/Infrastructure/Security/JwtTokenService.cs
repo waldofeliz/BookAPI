@@ -3,6 +3,7 @@ using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
 using Infrastructure.Identity;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 
@@ -11,11 +12,16 @@ namespace Infrastructure.Security;
 public sealed class JwtTokenService
 {
     private readonly JwtOptions _opt;
+    private readonly UserManager<ApplicationUser> _users;
     private readonly JwtSecurityTokenHandler _handler = new();
 
-    public JwtTokenService(IOptions<JwtOptions> opt) => _opt = opt.Value;
+    public JwtTokenService(IOptions<JwtOptions> opt, UserManager<ApplicationUser> users)
+    {
+        _opt = opt.Value;
+        _users = users;
+    }
 
-    public string CreateAccessToken(ApplicationUser user)
+    public async Task<string> CreateAccessTokenAsync(ApplicationUser user, CancellationToken ct = default)
     {
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_opt.SecretKey));
         var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
@@ -29,6 +35,9 @@ public sealed class JwtTokenService
             new(ClaimTypes.NameIdentifier, user.Id.ToString()),
             new(ClaimTypes.Name, user.UserName ?? user.Email ?? user.Id.ToString())
         };
+
+        var roles = await _users.GetRolesAsync(user);
+        claims.AddRange(roles.Select(role => new Claim(ClaimTypes.Role, role)));
 
         var expires = DateTime.UtcNow.AddMinutes(_opt.AccessTokenMinutes);
 
